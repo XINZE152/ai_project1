@@ -20,13 +20,6 @@
           >
             {{ item.label }}
           </button>
-          <a
-            class="tab-btn tab-btn-primary tab-btn-external"
-            :href="inventorySystemUrl"
-            title="打开进销存系统"
-          >
-            进销存系统
-          </a>
         </div>
         <div class="auth-tools">
           <button v-if="!isLoggedIn" class="auth-btn auth-btn-login" type="button" @click="showLogin = true">
@@ -125,10 +118,14 @@
         <WarehouseDistanceConfig />
       </section>
 
+      <section v-else-if="activeSection === 'inventory'" class="panel inventory-panel" key="panel-inventory">
+        <iframe src="/project3/" class="embedded-frame" title="新能源材料进销存系统" />
+      </section>
+
       <section v-else-if="activeSection === 'aiPricing'" class="panel ai-pricing-panel">
         <AiPricing />
       </section>
-      <section v-else class="panel iframe-panel">
+      <section v-else class="panel iframe-panel" key="panel-price">
         <iframe
           ref="priceIframeRef"
           class="embedded-frame"
@@ -203,10 +200,8 @@ type SectionKey =
   | 'price'
   | 'aiPricing'
   | 'warehouseDistance'
+  | 'inventory'
   | 'users'
-
-/** 新能源材料进销存系统（同窗口跳转） */
-const inventorySystemUrl = '/project3/'
 
 const primaryTabs: Array<{ key: SectionKey; label: string }> = [
   { key: 'map', label: '电子地图' },
@@ -215,6 +210,7 @@ const primaryTabs: Array<{ key: SectionKey; label: string }> = [
   { key: 'price', label: 'AI 比价系统' },
   // { key: 'aiPricing', label: 'AI 定价' },
   { key: 'warehouseDistance', label: '库房距离监测配置' },
+  { key: 'inventory', label: '进销存系统' },
 ]
 
 const predictionSubTabs: Array<{ key: PredictionSubKey; label: string }> = [
@@ -510,7 +506,7 @@ body {
   min-width: 0;
   display: flex;
   flex-wrap: nowrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
@@ -562,20 +558,6 @@ body {
   opacity: 0.78;
 }
 
-a.tab-btn {
-  text-decoration: none;
-}
-
-.tab-btn-external {
-  margin-left: auto;
-  flex-shrink: 0;
-  gap: 6px;
-}
-
-.tab-btn-external-icon {
-  font-size: 12px;
-  opacity: 0.9;
-}
 
 .prediction-sub-nav {
   display: flex;
@@ -698,6 +680,15 @@ a.tab-btn {
 }
 
 .iframe-panel {
+  flex: 1;
+  min-height: 0;
+  height: calc(100vh - 72px);
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.inventory-panel {
   flex: 1;
   min-height: 0;
   height: calc(100vh - 72px);

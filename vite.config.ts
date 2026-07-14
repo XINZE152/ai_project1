@@ -79,6 +79,15 @@ function buildAiDetectionProxy(env: Record<string, string>): Record<string, Prox
   }
 }
 
+/** 进销存系统 (NEMH) — 开发时将 /project3/ 转发到生产服务器，使 iframe 能正确加载 */
+function buildProject3Proxy(env: Record<string, string>): Record<string, ProxyOptions> {
+  const raw = (env.VITE_API_TARGET || DEFAULT_API_ORIGIN).trim()
+  const target = raw.replace(/\/+$/, '')
+  return {
+    '/project3': { target, changeOrigin: true, secure: proxySecureFlag(env) },
+  }
+}
+
 /** 库房 AI 定价分析接口代理 — 独立后端，不走 redspiderbc.cn */
 function buildVerticalWarehouseAiProxy(env: Record<string, string>): Record<string, ProxyOptions> {
   const raw = (env.VITE_VERTICAL_WAREHOUSE_AI_TARGET || 'http://118.25.96.187:8001').trim()
@@ -101,6 +110,7 @@ export default defineConfig(({ mode }) => {
     ...buildTlAuthProxy(env),
     ...buildPredictProxy(env),
     ...buildAiDetectionProxy(env),
+    ...buildProject3Proxy(env),
     ...buildVerticalWarehouseAiProxy(env),
     ...buildAmapGeocodeProxy(),
   }
