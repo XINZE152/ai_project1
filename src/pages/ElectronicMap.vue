@@ -5492,6 +5492,9 @@ function openComparisonModal() {
   if (sel && comparisonRanks.value.length) {
     void renderComparisonOverlay(sel, comparisonRanks.value)
   }
+  if (selectedWarehouse.value) {
+    void runForecastForWarehouse(selectedWarehouse.value)
+  }
 }
 
 function closeComparisonModal() {
